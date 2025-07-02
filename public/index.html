@@ -2,15 +2,66 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>O Flare domina</title>
+  <title>Visualizador Biozium</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <h1>Teste sua sorte - O seu link do canva deve estar aqui</h1>
-  <button onclick="buscarLink()">Buscar Link</button>
-  <div id="link">Clique no botão acima</div>
+  <main>
+    <h1>Visualizador de Link do Biozium</h1>
+    <button onclick="buscarLink()">Buscar Link Agora</button>
+    <div id="link">Clique no botão acima para obter o link do Canva Pro</div>
+
+    <div id="notificacoes">
+      <h2>Notificações de Mudança no Link do Biozium</h2>
+      <div id="notificacao-lista"></div>
+    </div>
+  </main>
 
   <script>
+    let ultimoBiozium = null;
+    const notificacoes = [];
+
+    function tempoDesde(timestamp) {
+      const segundos = Math.floor((Date.now() - timestamp) / 1000);
+      if (segundos < 60) return `${segundos}s atrás`;
+      const minutos = Math.floor(segundos / 60);
+      if (minutos < 60) return `${minutos}min atrás`;
+      const horas = Math.floor(minutos / 60);
+      if (horas < 24) return `${horas}h atrás`;
+      const dias = Math.floor(horas / 24);
+      if (dias < 30) return `${dias}d atrás`;
+      const meses = Math.floor(dias / 30);
+      if (meses < 12) return `${meses}m atrás`;
+      const anos = Math.floor(meses / 12);
+      return `${anos}y atrás`;
+    }
+
+    function atualizarNotificacoes() {
+      const lista = document.getElementById("notificacao-lista");
+      lista.innerHTML = "";
+      notificacoes.slice().reverse().forEach(item => {
+        const div = document.createElement("div");
+        div.className = "notificacao-item";
+        div.innerHTML = `📢 Novo Biozium detectado: <a href="${item.link}" target="_blank">${item.link}</a><br><span class="timestamp">${tempoDesde(item.timestamp)}</span>`;
+        lista.appendChild(div);
+      });
+    }
+
+    async function checarAtualizacaoBiozium() {
+      try {
+        const origem = "https://bingotingo.com/best-social-media-platforms/";
+        const html = await fetch(origem).then(r => r.text());
+        const match = html.match(/https?:\/\/[^"]*biozium[^"]*/i);
+        if (match && match[0] !== ultimoBiozium) {
+          ultimoBiozium = match[0];
+          notificacoes.push({ link: match[0], timestamp: Date.now() });
+          atualizarNotificacoes();
+        }
+      } catch (e) {
+        console.error("Erro ao checar link do Biozium:", e);
+      }
+    }
+
     async function buscarLink() {
       const linkDiv = document.getElementById("link");
       linkDiv.textContent = "Buscando, aguarde...";
@@ -19,19 +70,23 @@
         const data = await res.json();
 
         if (data.link) {
-          linkDiv.innerHTML = `✅ Link encontrado: <a href="${data.link}" target="_blank">${data.link}</a>`;
-        } else if (data.error) {
-          linkDiv.textContent = `❌ Erro: ${data.error}`;
-          linkDiv.id = "error";
+          linkDiv.innerHTML = `✅ Link do Canva: <a href="${data.link}" target="_blank">${data.link}</a>`;
+          if (data.isOnline === false) {
+            const aviso = document.createElement("p");
+            aviso.style.color = "#d93025";
+            aviso.textContent = "⚠️ Atenção: O link pode estar offline ou indisponível no momento.";
+            linkDiv.appendChild(aviso);
+          }
         } else {
-          linkDiv.textContent = "❌ Link não encontrado.";
-          linkDiv.id = "error";
+          linkDiv.textContent = `❌ Erro: ${data.error || 'Link não encontrado.'}`;
         }
       } catch {
         linkDiv.textContent = "❌ Erro ao buscar o link.";
-        linkDiv.id = "error";
       }
     }
+
+    setInterval(checarAtualizacaoBiozium, 30000);
+    checarAtualizacaoBiozium();
   </script>
 </body>
 </html>

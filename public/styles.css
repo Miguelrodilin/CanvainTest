@@ -5,80 +5,105 @@
   box-sizing: border-box;
 }
 
-/* Body com fundo leve e fonte agradável */
 body {
+  background-color: #f7f9fc;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f9fafe;
   color: #333;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
+  justify-content: flex-start;
   min-height: 100vh;
+  padding: 40px 20px;
 }
 
-/* Título principal */
-h1 {
-  font-weight: 700;
-  font-size: 2.5rem;
-  margin-bottom: 30px;
-  color: #1a73e8;
+main {
+  width: 100%;
+  max-width: 800px;
   text-align: center;
 }
 
-/* Botão estilizado */
+h1 {
+  font-size: 2.5rem;
+  color: #1a73e8;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  color: #444;
+}
+
 button {
   background-color: #1a73e8;
   color: white;
+  padding: 14px 28px;
+  font-size: 1.1rem;
   border: none;
-  padding: 15px 30px;
-  font-size: 1.2rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+  box-shadow: 0 5px 15px rgba(26, 115, 232, 0.2);
+  transition: background 0.3s;
 }
 
 button:hover {
   background-color: #155ab6;
 }
 
-/* Container do link */
 #link {
-  margin-top: 30px;
-  font-size: 1.15rem;
-  max-width: 600px;
-  word-break: break-word;
-  text-align: center;
+  margin-top: 25px;
+  font-size: 1.1rem;
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 
-/* Link estilizado */
+#notificacoes {
+  margin-top: 50px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  text-align: left;
+}
+
+.notificacao-item {
+  margin-bottom: 15px;
+  border-left: 4px solid #1a73e8;
+  padding-left: 12px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: #777;
+}
+
 a {
   color: #1a73e8;
   text-decoration: none;
-  font-weight: 600;
+  word-break: break-word;
 }
 
 a:hover {
   text-decoration: underline;
 }
 
-/* Mensagem de erro */
-#error {
-  color: #d93025;
-  font-weight: 600;
-  margin-top: 20px;
-}
-
-/* Responsividade */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
-  
+
   button {
     width: 100%;
-    padding: 15px 0;
+  }
+
+  #notificacoes {
+    padding: 15px;
   }
 
   #link {
