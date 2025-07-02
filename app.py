@@ -1,40 +1,40 @@
 import asyncio
+from flask import Flask, render_template, jsonify
 from pyppeteer import launch
 
-async def main():
-    # Launch a new browser instance
+app = Flask(__name__)
+
+async def get_canva_link():
     browser = await launch(headless=True)
-    # Create a new page
     page = await browser.newPage()
-    # Set the user agent
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36')
-    # Navigate to the website
     await page.goto("https://bingotingo.com/best-social-media-platforms/")
-    # Wait for the element with the text "Free Guide" to load
     await page.waitForXPath("//h2[text()='Free Guide']")
-    # Scroll down until the element with the text "Script link" is found
     await page.xpath("//h2[text()='Free Guide']")
-    # Wait for the button to appear and be clickable
-    print("Trying to find canva pro for you! Please wait 60s...")
+    print("Trying to find Canva Pro for you...")
+
     await page.waitForXPath("//*[@id='download']", {'visible': True, 'timeout': 70000})
     button = await page.xpath("//*[@id='download']")
-    # Click the button that opens the new tab
     await button[0].click()
-    # Wait for the new tab to open
     await asyncio.sleep(5)
-    # Get the handle of the new tab
+
     new_tab = (await browser.pages())[-1]
-    # Switch to the new tab
     await new_tab.bringToFront()
-    # Extract the href link from the button
+
     href_link = await new_tab.xpath("//a[text()='GET HERE']")
     href_link = await (await href_link[0].getProperty('href')).jsonValue()
-    #Print the link of canva pro in a text file
-    with open("canva_pro_link.txt", "w") as f:
-        f.write(href_link)
-        print("Canva Pro Found!")
 
-    # Close the browser instance
     await browser.close()
+    return href_link
 
-asyncio.get_event_loop().run_until_complete(main())
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/get-link')
+def fetch_link():
+    link = asyncio.get_event_loop().run_until_complete(get_canva_link())
+    return jsonify({'link': link})
+
+if __name__ == '__main__':
+    app.run(debug=True)
