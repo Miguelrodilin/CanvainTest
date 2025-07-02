@@ -19,14 +19,7 @@
         const data = await res.json();
 
         if (data.link) {
-          linkDiv.innerHTML = `✅ Link: <a href="${data.link}" target="_blank">${data.link}</a>`;
-          if (data.isOnline === false) {
-            const aviso = document.createElement("p");
-            aviso.style.color = "#d93025";
-            aviso.style.marginTop = "10px";
-            aviso.textContent = "⚠️ Atenção: O link pode estar offline ou indisponível no momento.";
-            linkDiv.appendChild(aviso);
-          }
+          linkDiv.innerHTML = `✅ Link encontrado: <a href="${data.link}" target="_blank">${data.link}</a>`;
         } else if (data.error) {
           linkDiv.textContent = `❌ Erro: ${data.error}`;
           linkDiv.id = "error";
