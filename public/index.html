@@ -1,31 +1,44 @@
-<script>
-  async function buscarLink() {
-    const linkDiv = document.getElementById("link");
-    linkDiv.textContent = "Buscando, aguarde...";
-    try {
-      const res = await fetch("/api/get-link");
-      const data = await res.json();
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualizador Biozium</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <h1>Visualizador de Link do Biozium</h1>
+  <button onclick="buscarLink()">Buscar Link</button>
+  <div id="link">Clique no botão acima</div>
 
-      if (data.link) {
-        linkDiv.innerHTML = `✅ Link: <a href="${data.link}" target="_blank">${data.link}</a>`;
-        if (data.isOnline === false) {
-          const aviso = document.createElement("p");
-          aviso.style.color = "#d93025";
-          aviso.style.marginTop = "10px";
-          aviso.textContent = "⚠️ Atenção: O link pode estar offline ou indisponível no momento.";
-          linkDiv.appendChild(aviso);
+  <script>
+    async function buscarLink() {
+      const linkDiv = document.getElementById("link");
+      linkDiv.textContent = "Buscando, aguarde...";
+      try {
+        const res = await fetch("/api/get-link");
+        const data = await res.json();
+
+        if (data.link) {
+          linkDiv.innerHTML = `✅ Link: <a href="${data.link}" target="_blank">${data.link}</a>`;
+          if (data.isOnline === false) {
+            const aviso = document.createElement("p");
+            aviso.style.color = "#d93025";
+            aviso.style.marginTop = "10px";
+            aviso.textContent = "⚠️ Atenção: O link pode estar offline ou indisponível no momento.";
+            linkDiv.appendChild(aviso);
+          }
+        } else if (data.error) {
+          linkDiv.textContent = `❌ Erro: ${data.error}`;
+          linkDiv.id = "error";
+        } else {
+          linkDiv.textContent = "❌ Link não encontrado.";
+          linkDiv.id = "error";
         }
-      } else if (data.error) {
-        linkDiv.textContent = `❌ Erro: ${data.error}.
-        Verifique: ${data.link}`;
-        linkDiv.id = "error";
-      } else {
-        linkDiv.textContent = "❌ Link não encontrado.";
+      } catch {
+        linkDiv.textContent = "❌ Erro ao buscar o link.";
         linkDiv.id = "error";
       }
-    } catch {
-      linkDiv.textContent = "❌ Erro ao buscar o link.";
-      linkDiv.id = "error";
     }
-  }
-</script>
+  </script>
+</body>
+</html>
