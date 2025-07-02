@@ -1,5 +1,5 @@
 {
-  "name": "biozium-visualizer",
+  "name": "biozium-canva-visualizer",
   "version": "1.0.0",
   "main": "api/get-link.js",
   "dependencies": {
