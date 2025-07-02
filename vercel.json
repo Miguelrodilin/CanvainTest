@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/get-link.js": {
+      "memory": 512,
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    { "src": "/api/get-link", "dest": "/api/get-link.js" },
+    { "src": "/", "dest": "/public/index.html" }
+  ]
+}
