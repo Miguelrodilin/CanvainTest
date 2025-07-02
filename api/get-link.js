@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
   try {
-    // Etapa 1: Acessa a página original do bingotingo
+    // Etapa 1: Acessa a página do Bingotingo
     const origem = "https://bingotingo.com/best-social-media-platforms/";
     const origemHtml = await fetch(origem).then(r => r.text());
 
@@ -23,7 +23,13 @@ module.exports = async (req, res) => {
     }
     const canvaLink = canvaMatch[0];
 
-    // ✅ Sucesso: retorna o link final
+    // Etapa 5: Verifica se o link do Canva está acessível
+    const response = await fetch(canvaLink, { method: "HEAD" }); // apenas cabeçalhos
+    if (!response.ok) {
+      return res.status(400).json({ error: "O link do Canva parece estar offline ou inválido.", status: response.status });
+    }
+
+    // ✅ Retorna o link válido
     return res.status(200).json({ link: canvaLink });
 
   } catch (e) {
