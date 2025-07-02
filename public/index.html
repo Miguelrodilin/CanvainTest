@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Buscador...</title>
+  <title>Buscador do Flare</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <h1>Buscador de Links de Canva</h1>
+  <h1>Buscador de links Canva Pro</h1>
   <button onclick="buscarLink()">Buscar Link</button>
   <div id="link">Clique no botão acima</div>
 
@@ -19,7 +19,14 @@
         const data = await res.json();
 
         if (data.link) {
-          linkDiv.innerHTML = `✅ Link encontrado: <a href="${data.link}" target="_blank">${data.link}</a>`;
+          linkDiv.innerHTML = `✅ Link: <a href="${data.link}" target="_blank">${data.link}</a>`;
+          if (data.isOnline === false) {
+            const aviso = document.createElement("p");
+            aviso.style.color = "#d93025";
+            aviso.style.marginTop = "10px";
+            aviso.textContent = "⚠️ Atenção: O link pode estar offline ou indisponível no momento.";
+            linkDiv.appendChild(aviso);
+          }
         } else if (data.error) {
           linkDiv.textContent = `❌ Erro: ${data.error}`;
           linkDiv.id = "error";
