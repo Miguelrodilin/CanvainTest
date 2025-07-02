@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Visualizador Biozium</title>
+  <meta charset="UTF-8" />
+  <title>Buscador...</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <h1>Visualizador de Link do Biozium</h1>
+  <h1>Buscador de Links de Canva</h1>
   <button onclick="buscarLink()">Buscar Link</button>
   <div id="link">Clique no botão acima</div>
 
   <script>
     async function buscarLink() {
-      document.getElementById("link").innerText = "Buscando, aguarde...";
-      const res = await fetch("/api/get-link");
-      const data = await res.json();
-      if (data.link) {
-        document.getElementById("link").innerHTML = `✅ Link: <a href="${data.link}" target="_blank">${data.link}</a>`;
-      } else {
-        document.getElementById("link").innerText = "❌ Link não encontrado.";
+      const linkDiv = document.getElementById("link");
+      linkDiv.textContent = "Buscando, aguarde...";
+      try {
+        const res = await fetch("/api/get-link");
+        const data = await res.json();
+
+        if (data.link) {
+          linkDiv.innerHTML = `✅ Link encontrado: <a href="${data.link}" target="_blank">${data.link}</a>`;
+        } else if (data.error) {
+          linkDiv.textContent = `❌ Erro: ${data.error}`;
+          linkDiv.id = "error";
+        } else {
+          linkDiv.textContent = "❌ Link não encontrado.";
+          linkDiv.id = "error";
+        }
+      } catch {
+        linkDiv.textContent = "❌ Erro ao buscar o link.";
+        linkDiv.id = "error";
       }
     }
   </script>
